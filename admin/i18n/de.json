@@ -55,5 +55,10 @@
     "hint_assignment_dynamic": "Die dynamische Zuordnungs-Tabelle wird live aus deiner HASS-Registry generiert. Öffne die Adapter-Einstellungen im verbundenen Zustand, um sie zu sehen.",
     "hint_mapping_dynamic": "Die Custom-Mapping-Tabelle wird live aus deinen HASS-Entities erzeugt. Öffne die Adapter-Einstellungen im verbundenen Zustand.",
 
-    "btn_force_sync": "Jetzt synchronisieren"
+    "btn_force_sync": "Jetzt synchronisieren",
+    "btn_refresh_selection": "Aus HASS neu laden",
+    "label_devices_table": "HASS-Geräte",
+    "label_entities_table": "HASS-Entities",
+    "label_assignments_table": "Geräte → Raum / Funktion",
+    "label_mapping_table": "Entity-Typ-Overrides"
 }

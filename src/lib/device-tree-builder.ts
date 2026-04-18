@@ -33,17 +33,11 @@ export class DeviceTreeBuilder {
         const devRoot = `${this.opts.namespace}.${DEVICES_ROOT}.${safeDevId}`;
         const friendly = device.name_by_user ?? device.name ?? device.id;
 
-        await this.store.setObject(devRoot, {
-            type: 'device',
-            common: { name: friendly },
-            native: {
-                device_id: device.id,
-                manufacturer: device.manufacturer ?? '',
-                model: device.model ?? '',
-            },
-        });
-
-        // Group entities by detected type (or overridden type).
+        // Group entities by detected type FIRST so we know whether this device
+        // has any projectable children at all. Empty devices (platform-virtual
+        // HASS devices whose only entities aren't in entity_registry, or devices
+        // with purely non-mappable entities like weather/calendar) get skipped
+        // entirely — no more zombie device roots in the tree.
         const grouped = new Map<DeviceType, Array<{ entity: HassEntity; state: HassState | undefined }>>();
         for (const ent of entities) {
             const override = this.opts.customMappings?.[ent.entity_id];
@@ -57,6 +51,28 @@ export class DeviceTreeBuilder {
             }
             grouped.get(type)!.push({ entity: ent, state });
         }
+
+        if (grouped.size === 0) {
+            // Nothing projectable. Remove any stale device-root that may exist
+            // from an earlier projection (protects against user disabling an
+            // entity that was the only member of a device).
+            try {
+                await this.store.deleteObject(devRoot);
+            } catch {
+                /* ignore */
+            }
+            return;
+        }
+
+        await this.store.setObject(devRoot, {
+            type: 'device',
+            common: { name: friendly },
+            native: {
+                device_id: device.id,
+                manufacturer: device.manufacturer ?? '',
+                model: device.model ?? '',
+            },
+        });
 
         for (const [type, members] of grouped) {
             // Channel one-per-type per device. If multiple entities map to the same

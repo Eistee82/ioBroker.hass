@@ -158,10 +158,14 @@ export class ObjectProjector {
 
     private async applyEntity(entityId: string, state: HassState): Promise<void> {
         this.opts.logger?.debug?.(`applyEntity: ${entityId} state=${state.state}`);
-        const entity = this.registry.getEntity(entityId);
+        let entity = this.registry.getEntity(entityId);
+        const isOrphan = !entity;
         if (!entity) {
-            this.opts.logger?.debug?.(`skip ${entityId} — not in entity registry`);
-            return;
+            // Orphan entity — platform-internal HASS entity not in entity_registry
+            // (sun.sun, update.home_assistant_core_update, backup.*, etc.). Build a
+            // synthetic entity so we can project it into the entities.* tree.
+            entity = synthesiseOrphanEntity(entityId);
+            this.opts.logger?.debug?.(`orphan entity (no registry entry): ${entityId} → synthetic projection`);
         }
         if (this.opts.shouldInclude && !this.opts.shouldInclude(entity)) {
             return;
@@ -170,7 +174,8 @@ export class ObjectProjector {
         if (this.entityBuilder) {
             branches.push(this.entityBuilder.apply(entity, state));
         }
-        if (this.deviceBuilder && entity.device_id) {
+        // Orphans have no device_id → no devices.* branch.
+        if (!isOrphan && this.deviceBuilder && entity.device_id) {
             const device = this.registry.getDevice(entity.device_id);
             if (device) {
                 const deviceEntities = this.registry.getEntitiesForDevice(device.id);
@@ -185,6 +190,27 @@ export class ObjectProjector {
         }
         this.opts.logger?.debug?.(`applyEntity done: ${entityId} branches=${branches.length}`);
     }
+}
+
+function synthesiseOrphanEntity(entityId: string): HassEntity {
+    const domain = entityId.split('.')[0] ?? 'unknown';
+    return {
+        entity_id: entityId,
+        device_id: null,
+        area_id: null,
+        platform: domain,
+        unique_id: entityId,
+        name: null,
+        original_name: null,
+        icon: null,
+        original_icon: null,
+        disabled_by: null,
+        hidden_by: null,
+        entity_category: null,
+        device_class: null,
+        original_device_class: null,
+        unit_of_measurement: null,
+    };
 }
 
 function decompress(entityId: string, cs: CompressedState, prev: HassState | undefined): HassState {

@@ -111,15 +111,15 @@ describe('DeviceTreeBuilder', () => {
         expect(store.states.get('hass.0.devices.dev_multi.temperature.ACTUAL')?.val).toBeCloseTo(21.3);
     });
 
-    it('skips unmappable entities without error', async () => {
+    it('skips unmappable entities and does NOT create an empty device root', async () => {
         const store = new InMemoryObjectStore();
         const builder = new DeviceTreeBuilder(store, { namespace: NS });
         const dev = mkDevice('dev_weather');
         const ent = mkEntity('weather.home', 'dev_weather');
         await builder.applyDevice(dev, [ent], () => mkState('weather.home', 'sunny'));
         expect(store.objects.get('hass.0.devices.dev_weather.weather')).toBeUndefined();
-        // Device root is still created.
-        expect(store.objects.get('hass.0.devices.dev_weather')).toBeDefined();
+        // Device root is also NOT created — no point in an empty zombie device.
+        expect(store.objects.get('hass.0.devices.dev_weather')).toBeUndefined();
     });
 
     it('honours a custom mapping override', async () => {

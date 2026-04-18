@@ -9,7 +9,7 @@
                 "_intro": {
                     "type": "staticText",
                     "text": "intro_connection",
-                    "hidden": "!!_admin && !!_admin.expertMode",
+                    "hidden": "data._expertMode === true",
                     "sm": 12
                 },
                 "host": {
@@ -83,7 +83,7 @@
                 "_intro": {
                     "type": "staticText",
                     "text": "intro_objects",
-                    "hidden": "!!_admin && !!_admin.expertMode",
+                    "hidden": "data._expertMode === true",
                     "sm": 12
                 },
                 "createDevicesTree": {
@@ -152,22 +152,95 @@
                 "_intro": {
                     "type": "staticText",
                     "text": "intro_selection",
-                    "hidden": "!!_admin && !!_admin.expertMode",
+                    "hidden": "data._expertMode === true",
                     "sm": 12
                 },
-                "sync.includePatterns": {
-                    "type": "chips",
-                    "label": "label_include_patterns",
-                    "help": "help_include_patterns",
-                    "expertMode": true,
-                    "sm": 12
+                "_refresh": {
+                    "type": "sendTo",
+                    "label": "btn_refresh_selection",
+                    "command": "refreshSelection",
+                    "variant": "outlined",
+                    "sm": 12,
+                    "md": 6
                 },
-                "sync.excludePatterns": {
-                    "type": "chips",
-                    "label": "label_exclude_patterns",
-                    "help": "help_exclude_patterns",
+                "syncDevicesTable": {
+                    "type": "table",
+                    "label": "label_devices_table",
+                    "sm": 12,
+                    "items": [
+                        {
+                            "type": "text",
+                            "attr": "deviceId",
+                            "title": "Device-ID",
+                            "width": "250px"
+                        },
+                        {
+                            "type": "text",
+                            "attr": "name",
+                            "title": "Name",
+                            "width": "200px"
+                        },
+                        {
+                            "type": "text",
+                            "attr": "manufacturer",
+                            "title": "Hersteller",
+                            "width": "120px"
+                        },
+                        {
+                            "type": "text",
+                            "attr": "model",
+                            "title": "Modell",
+                            "width": "120px"
+                        },
+                        {
+                            "type": "number",
+                            "attr": "entityCount",
+                            "title": "#Ent",
+                            "width": "70px"
+                        },
+                        {
+                            "type": "checkbox",
+                            "attr": "enabled",
+                            "title": "Sync",
+                            "width": "60px"
+                        }
+                    ],
+                    "noDelete": true,
+                    "noAdd": true
+                },
+                "syncEntitiesTable": {
+                    "type": "table",
+                    "label": "label_entities_table",
                     "expertMode": true,
-                    "sm": 12
+                    "sm": 12,
+                    "items": [
+                        {
+                            "type": "text",
+                            "attr": "entityId",
+                            "title": "Entity-ID",
+                            "width": "300px"
+                        },
+                        {
+                            "type": "text",
+                            "attr": "domain",
+                            "title": "Domain",
+                            "width": "120px"
+                        },
+                        {
+                            "type": "text",
+                            "attr": "deviceId",
+                            "title": "Device",
+                            "width": "250px"
+                        },
+                        {
+                            "type": "checkbox",
+                            "attr": "enabled",
+                            "title": "Sync",
+                            "width": "60px"
+                        }
+                    ],
+                    "noDelete": true,
+                    "noAdd": true
                 }
             }
         },
@@ -178,13 +251,57 @@
                 "_intro": {
                     "type": "staticText",
                     "text": "intro_assignment",
-                    "hidden": "!!_admin && !!_admin.expertMode",
+                    "hidden": "data._expertMode === true",
                     "sm": 12
                 },
-                "_hint": {
-                    "type": "staticText",
-                    "text": "hint_assignment_dynamic",
-                    "sm": 12
+                "_refresh": {
+                    "type": "sendTo",
+                    "label": "btn_refresh_selection",
+                    "command": "refreshSelection",
+                    "variant": "outlined",
+                    "sm": 12,
+                    "md": 6
+                },
+                "assignmentsTable": {
+                    "type": "table",
+                    "label": "label_assignments_table",
+                    "sm": 12,
+                    "items": [
+                        {
+                            "type": "text",
+                            "attr": "deviceId",
+                            "title": "Device-ID",
+                            "width": "250px"
+                        },
+                        {
+                            "type": "text",
+                            "attr": "name",
+                            "title": "Name",
+                            "width": "200px"
+                        },
+                        {
+                            "type": "text",
+                            "attr": "hassArea",
+                            "title": "HASS-Area",
+                            "width": "140px"
+                        },
+                        {
+                            "type": "selectSendTo",
+                            "attr": "room",
+                            "title": "ioBroker-Raum",
+                            "width": "200px",
+                            "command": "listRooms"
+                        },
+                        {
+                            "type": "selectSendTo",
+                            "attr": "function",
+                            "title": "Funktion",
+                            "width": "200px",
+                            "command": "listFunctions"
+                        }
+                    ],
+                    "noDelete": true,
+                    "noAdd": true
                 }
             }
         },
@@ -195,13 +312,103 @@
                 "_intro": {
                     "type": "staticText",
                     "text": "intro_mapping",
-                    "hidden": "!!_admin && !!_admin.expertMode",
+                    "hidden": "data._expertMode === true",
                     "sm": 12
                 },
-                "_hint": {
-                    "type": "staticText",
-                    "text": "hint_mapping_dynamic",
-                    "sm": 12
+                "_refresh": {
+                    "type": "sendTo",
+                    "label": "btn_refresh_selection",
+                    "command": "refreshSelection",
+                    "variant": "outlined",
+                    "sm": 12,
+                    "md": 6
+                },
+                "customMappingsTable": {
+                    "type": "table",
+                    "label": "label_mapping_table",
+                    "sm": 12,
+                    "items": [
+                        {
+                            "type": "text",
+                            "attr": "entityId",
+                            "title": "Entity-ID",
+                            "width": "320px"
+                        },
+                        {
+                            "type": "select",
+                            "attr": "overrideType",
+                            "title": "Type-Override",
+                            "width": "180px",
+                            "options": [
+                                {
+                                    "value": "none",
+                                    "label": "(skip)"
+                                },
+                                {
+                                    "value": "light",
+                                    "label": "light"
+                                },
+                                {
+                                    "value": "dimmer",
+                                    "label": "dimmer"
+                                },
+                                {
+                                    "value": "rgb",
+                                    "label": "rgb"
+                                },
+                                {
+                                    "value": "socket",
+                                    "label": "socket"
+                                },
+                                {
+                                    "value": "thermostat",
+                                    "label": "thermostat"
+                                },
+                                {
+                                    "value": "blind",
+                                    "label": "blind"
+                                },
+                                {
+                                    "value": "window",
+                                    "label": "window"
+                                },
+                                {
+                                    "value": "door",
+                                    "label": "door"
+                                },
+                                {
+                                    "value": "motion",
+                                    "label": "motion"
+                                },
+                                {
+                                    "value": "temperature",
+                                    "label": "temperature"
+                                },
+                                {
+                                    "value": "humidity",
+                                    "label": "humidity"
+                                },
+                                {
+                                    "value": "media",
+                                    "label": "media"
+                                },
+                                {
+                                    "value": "vacuum",
+                                    "label": "vacuum"
+                                },
+                                {
+                                    "value": "lock",
+                                    "label": "lock"
+                                },
+                                {
+                                    "value": "button",
+                                    "label": "button"
+                                }
+                            ]
+                        }
+                    ],
+                    "noDelete": true,
+                    "noAdd": true
                 }
             }
         },
@@ -212,7 +419,7 @@
                 "_intro": {
                     "type": "staticText",
                     "text": "intro_diagnostics",
-                    "hidden": "!!_admin && !!_admin.expertMode",
+                    "hidden": "data._expertMode === true",
                     "sm": 12
                 },
                 "_forceSync": {

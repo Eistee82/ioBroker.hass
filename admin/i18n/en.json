@@ -55,5 +55,10 @@
     "hint_assignment_dynamic": "The dynamic device/entity assignment view is generated from your live HASS registry. Open the adapter settings while connected to see the table.",
     "hint_mapping_dynamic": "The custom mapping view is populated from live HASS entities. Open the adapter settings while connected.",
 
-    "btn_force_sync": "Sync now"
+    "btn_force_sync": "Sync now",
+    "btn_refresh_selection": "Refresh from HASS",
+    "label_devices_table": "HASS devices",
+    "label_entities_table": "HASS entities",
+    "label_assignments_table": "Device → room / function mapping",
+    "label_mapping_table": "Entity type overrides"
 }
