@@ -248,8 +248,109 @@ class HassAdapter extends Adapter {
                 }
                 return;
             }
+            case 'listDevices': {
+                this.replyTo(msg, { rows: this.snapshotDeviceRows() });
+                return;
+            }
+            case 'listEntities': {
+                this.replyTo(msg, { rows: this.snapshotEntityRows() });
+                return;
+            }
+            case 'listAssignmentRows': {
+                this.replyTo(msg, { rows: await this.snapshotAssignmentRows() });
+                return;
+            }
+            case 'listMappingRows': {
+                this.replyTo(msg, { rows: this.snapshotMappingRows() });
+                return;
+            }
             default:
                 this.log.warn(`unknown message command: ${msg.command}`);
+        }
+    }
+
+    private snapshotDeviceRows(): Array<Record<string, unknown>> {
+        if (!this.registry) {
+            return [];
+        }
+        return this.registry.getAllDevices().map(d => {
+            const entities = this.registry!.getEntitiesForDevice(d.id);
+            return {
+                deviceId: d.id,
+                name: d.name_by_user ?? d.name ?? d.id,
+                manufacturer: d.manufacturer ?? '',
+                model: d.model ?? '',
+                disabled: Boolean(d.disabled_by),
+                entityCount: entities.length,
+            };
+        });
+    }
+
+    private snapshotEntityRows(): Array<Record<string, unknown>> {
+        if (!this.registry) {
+            return [];
+        }
+        return this.registry.getAllEntities().map(e => ({
+            entityId: e.entity_id,
+            domain: e.entity_id.split('.')[0] ?? '',
+            name: e.name ?? e.original_name ?? e.entity_id,
+            deviceId: e.device_id ?? '',
+            areaId: e.area_id ?? '',
+            disabled: Boolean(e.disabled_by),
+            hidden: Boolean(e.hidden_by),
+        }));
+    }
+
+    private async snapshotAssignmentRows(): Promise<Array<Record<string, unknown>>> {
+        if (!this.registry) {
+            return [];
+        }
+        const rooms = await this.loadEnumChoices('rooms');
+        const functions = await this.loadEnumChoices('functions');
+        return this.registry.getAllDevices().map(d => {
+            const area = d.area_id ? this.registry!.getArea(d.area_id) : undefined;
+            return {
+                deviceId: d.id,
+                name: d.name_by_user ?? d.name ?? d.id,
+                hassArea: area?.name ?? '',
+                roomChoices: rooms,
+                functionChoices: functions,
+            };
+        });
+    }
+
+    private snapshotMappingRows(): Array<Record<string, unknown>> {
+        if (!this.registry) {
+            return [];
+        }
+        return this.registry.getAllEntities().map(e => ({
+            entityId: e.entity_id,
+            domain: e.entity_id.split('.')[0] ?? '',
+            deviceId: e.device_id ?? '',
+        }));
+    }
+
+    private async loadEnumChoices(kind: 'rooms' | 'functions'): Promise<Array<{ id: string; name: string }>> {
+        try {
+            const objects = await this.getObjectViewAsync('system', 'enum', {
+                startkey: `enum.${kind}.`,
+                endkey: `enum.${kind}.\u9999`,
+            });
+            return objects.rows.map(
+                (r: { id: string; value?: { common?: { name?: string | Record<string, string> } } }) => {
+                    const common = r.value?.common;
+                    let displayName = r.id;
+                    if (typeof common?.name === 'string') {
+                        displayName = common.name;
+                    } else if (common?.name && typeof common.name === 'object') {
+                        displayName = common.name.de ?? common.name.en ?? r.id;
+                    }
+                    return { id: r.id, name: displayName };
+                },
+            );
+        } catch (e) {
+            this.log.warn(`loadEnumChoices(${kind}) failed: ${errorMsg(e)}`);
+            return [];
         }
     }
 
