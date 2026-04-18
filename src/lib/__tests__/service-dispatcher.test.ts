@@ -272,20 +272,21 @@ describe('ServiceDispatcher — plumbing', () => {
         expect(calls[0]?.data?.brightness).toBe(Math.round((30 / 100) * 255));
     });
 
-    it('emits optimistic state immediately (ack=false)', async () => {
-        const { client, registry, store } = mkFixture();
+    it('does NOT write optimistically on success — lets HASS delta ack the value', async () => {
+        const { client, registry, store, calls } = mkFixture();
         registry.setDevices([mkDevice('d')]);
         registry.setEntities([mkEntity('light.x', 'd')]);
         const dsp = new ServiceDispatcher(client, registry, store, {
             namespace: NS,
-            coalesceMs: 30,
+            coalesceMs: 10,
             responseTimeoutMs: 1_000,
         });
         dsp.handleStateChange(`${NS}.devices.d.dimmer.SET`, 80, false);
-        // microtask queue so that `void this.store.setState()` resolves.
-        await Promise.resolve();
-        const write = store.writeLog[0];
-        expect(write?.value).toMatchObject({ val: 80, ack: false, q: 0 });
+        await vi.advanceTimersByTimeAsync(20);
+        // The dispatcher forwards the call to HASS but does NOT write a pending
+        // state on success (avoids the subscribeStates feedback loop).
+        expect(calls).toHaveLength(1);
+        expect(store.writeLog).toHaveLength(0);
     });
 
     it('flags timeout with quality=0x40 when HASS never acks', async () => {

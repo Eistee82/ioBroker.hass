@@ -72,8 +72,13 @@ export class ServiceDispatcher {
             this.opts.logger?.warn?.(`write ${stateId} → entity ${parsed.entityId} not in registry`);
             return;
         }
-        // Optimistic update (quality=0x00 pending).
-        void this.store.setState(stateId, { val, ack: false, q: 0x00 });
+        this.opts.logger?.debug?.(
+            `dispatch write: ${stateId} → ${parsed.entityId} (${parsed.deviceType ?? 'entity-tree'}.${parsed.stateKind ?? 'state'})`,
+        );
+        // NB: no optimistic setState here. Writing ack=false back to the same id
+        // would re-trigger our own stateChange listener (infinite loop). Instead
+        // we let the HASS subscribe_entities delta ack the value, and only update
+        // on failure/timeout below.
         this.coalescer.push(stateId, {
             stateId,
             entity,
@@ -313,15 +318,15 @@ export class ServiceDispatcher {
             return { entityId };
         }
         if (rest[0] === 'devices') {
-            // devices.<dev_id>.<type>.<STATE>
+            // devices.<dev_id>.<channel>.<STATE>
+            // Channel can be either "<type>" (single entity of that type per device)
+            // or "<type>_<entity-suffix>" (multiple entities of the same type).
             if (rest.length < 4) {
                 return null;
             }
             const deviceIdSafe = rest[1];
-            const typeName = rest[2];
+            const channelName = rest[2];
             const stateKind = rest[3];
-            // Find the matching entity — prefer the one whose detected type matches and whose stateKind
-            // maps to the device-type schema.
             const device = this.registry
                 .getAllDevices()
                 .find(d => d.id.replace(/[^a-zA-Z0-9_]/g, '_') === deviceIdSafe);
@@ -329,19 +334,59 @@ export class ServiceDispatcher {
                 return null;
             }
             const entities = this.registry.getEntitiesForDevice(device.id);
-            // Pick by domain heuristic.
-            const entity = pickEntityForType(entities, typeName as DeviceType);
+            const { type, entitySuffix } = extractTypeFromChannel(channelName);
+            if (!type) {
+                return null;
+            }
+            // Prefer entity matching suffix; otherwise fall back to domain heuristic.
+            const entity = entitySuffix
+                ? (entities.find(
+                      e => (e.entity_id.split('.')[1] ?? '').replace(/[^a-zA-Z0-9_]/g, '_') === entitySuffix,
+                  ) ?? pickEntityForType(entities, type))
+                : pickEntityForType(entities, type);
             if (!entity) {
                 return null;
             }
             return {
                 entityId: entity.entity_id,
-                deviceType: typeName as DeviceType,
+                deviceType: type,
                 stateKind,
             };
         }
         return null;
     }
+}
+
+const KNOWN_DEVICE_TYPES: ReadonlyArray<DeviceType> = [
+    'rgb',
+    'dimmer',
+    'light',
+    'socket',
+    'thermostat',
+    'blind',
+    'window',
+    'door',
+    'motion',
+    'temperature',
+    'humidity',
+    'media',
+    'vacuum',
+    'lock',
+    'button',
+];
+
+function extractTypeFromChannel(channel: string): { type: DeviceType | null; entitySuffix: string | null } {
+    // Exact match first.
+    if (KNOWN_DEVICE_TYPES.includes(channel as DeviceType)) {
+        return { type: channel as DeviceType, entitySuffix: null };
+    }
+    // Prefix match with underscore separator.
+    for (const t of KNOWN_DEVICE_TYPES) {
+        if (channel.startsWith(`${t}_`)) {
+            return { type: t, entitySuffix: channel.slice(t.length + 1) };
+        }
+    }
+    return { type: null, entitySuffix: null };
 }
 
 function pickEntityForType(entities: HassEntity[], type: DeviceType): HassEntity | undefined {

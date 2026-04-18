@@ -249,13 +249,29 @@
     "host": "127.0.0.1",
     "port": 8123,
     "password": "",
-    "secure": false
+    "secure": false,
+    "accessToken": "",
+    "allowSelfSignedCert": false,
+    "caCertificate": "",
+    "caPrivateKey": "",
+    "createDevicesTree": true,
+    "createEntitiesTree": false,
+    "autoIncludeNewDevices": true,
+    "debounceMs": 50,
+    "writeCoalesceMs": 30,
+    "responseTimeoutMs": 2000
   },
   "protectedNative": [
-    "password"
+    "password",
+    "accessToken",
+    "caCertificate",
+    "caPrivateKey"
   ],
   "encryptedNative": [
-    "password"
+    "password",
+    "accessToken",
+    "caCertificate",
+    "caPrivateKey"
   ],
   "objects": [],
   "instanceObjects": [

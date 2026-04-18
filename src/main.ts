@@ -44,6 +44,7 @@ class HassAdapter extends Adapter {
             void this.main();
         });
         this.on('stateChange', (id, state) => {
+            this.log.debug(`stateChange event: ${id} val=${JSON.stringify(state?.val)} ack=${state?.ack}`);
             if (!state || !this.dispatcher) {
                 return;
             }
@@ -117,8 +118,11 @@ class HassAdapter extends Adapter {
             await this.seedRegistries();
             await this.attachSubscriptions();
             this.setupDispatcher();
-            await this.projector?.deleteStale().catch(e => this.log.warn(`stale cleanup skipped: ${errorMsg(e)}`));
             await this.subscribeStatesAsync('*');
+            // NOTE: deleteStale() is intentionally NOT called on startup. Its wanted-set
+            // currently only contains top-level entity/device paths, so running it before
+            // all channels/states are written would wipe the tree. Users can trigger it
+            // manually via the forceSync sendTo command once the projection is stable.
         } catch (e) {
             this.log.error(`startup failed: ${errorMsg(e)}`);
             this.terminate?.(1);

@@ -157,6 +157,7 @@ export class ObjectProjector {
     }
 
     private async applyEntity(entityId: string, state: HassState): Promise<void> {
+        this.opts.logger?.debug?.(`applyEntity: ${entityId} state=${state.state}`);
         const entity = this.registry.getEntity(entityId);
         if (!entity) {
             this.opts.logger?.debug?.(`skip ${entityId} — not in entity registry`);
@@ -182,6 +183,7 @@ export class ObjectProjector {
                 this.opts.logger?.warn?.(`branch write failed for ${entityId}: ${errorMsg(r.reason)}`);
             }
         }
+        this.opts.logger?.debug?.(`applyEntity done: ${entityId} branches=${branches.length}`);
     }
 }
 
