@@ -10,3 +10,17 @@ package-lock.json
 .commitinfo
 .claude/settings.local.json
 
+
+# v3 — Test & Report Artefakte
+.env
+.env.local
+reports/
+test-results/
+.playwright-mcp/
+playwright-report/
+.dev-server/
+dev-server.log
+dev-server.pid
+
+# v3 — IDE
+.vscode/settings.json
