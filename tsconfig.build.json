@@ -8,5 +8,6 @@
         "rootDir": "src",
         "types": ["@iobroker/types"]
     },
-    "include": ["src/**/*.ts", "src/**/*.d.ts"]
+    "include": ["src/**/*.ts", "src/**/*.d.ts"],
+    "exclude": ["src/**/__tests__/**/*", "src/**/*.test.ts"]
 }

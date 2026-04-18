@@ -41,7 +41,8 @@
     "@playwright/test": "^1.59.1",
     "@types/ws": "^8.18.1",
     "dotenv": "^17.4.2",
-    "mocha": "^11.7.5"
+    "mocha": "^11.7.5",
+    "vitest": "^4.1.4"
   },
   "main": "build/main.js",
   "files": [
@@ -65,9 +66,11 @@
     "translate": "translate-adapter",
     "dev-server:watch": "iobroker-dev-server watch",
     "dev-server:run": "iobroker-dev-server run",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
-    "verify:full": "npm run build && npm run lint && npm test && npm run test:e2e"
+    "verify:full": "npm run build && npm run lint && npm run test:unit && npm test && npm run test:e2e"
   },
   "bugs": {
     "url": "https://github.com/ioBroker/ioBroker.hass/issues"
