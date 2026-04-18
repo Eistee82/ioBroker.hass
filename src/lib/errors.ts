@@ -20,7 +20,7 @@ export function errorMsg(e: unknown): string {
     if (e === undefined) {
         return 'undefined';
     }
-    const raw = e instanceof Error ? e.message : typeof e === 'string' ? e : (JSON.stringify(e) ?? String(e));
+    const raw = e instanceof Error ? e.message : typeof e === 'string' ? e : (safeStringify(e) ?? 'unknown');
     return redactSecrets(raw);
 }
 
@@ -29,4 +29,12 @@ const PEM_PATTERN = /-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*P
 
 export function redactSecrets(input: string): string {
     return input.replace(JWT_PATTERN, '[redacted-token]').replace(PEM_PATTERN, '[redacted-private-key]');
+}
+
+function safeStringify(v: unknown): string | null {
+    try {
+        return JSON.stringify(v);
+    } catch {
+        return null;
+    }
 }

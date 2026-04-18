@@ -131,23 +131,32 @@ export class HassWsClient extends EventEmitter {
             }
 
             if (!authDone) {
-                this.handleAuthMessage(msg, accessToken, () => {
-                    authDone = true;
-                    this.connected = true;
-                    this.reconnectAttempt = 0;
-                    this.emit('connected', (msg as WsAuthOk).ha_version ?? '');
-                    resolveConnect?.();
-                    resolveConnect = undefined;
-                    rejectConnect = undefined;
-                }, (err) => {
-                    authDone = true;
-                    this.shouldReconnect = false;
-                    this.emit('authError', err);
-                    rejectConnect?.(new Error(err));
-                    resolveConnect = undefined;
-                    rejectConnect = undefined;
-                    try { ws.close(); } catch { /* ignore */ }
-                });
+                this.handleAuthMessage(
+                    msg,
+                    accessToken,
+                    () => {
+                        authDone = true;
+                        this.connected = true;
+                        this.reconnectAttempt = 0;
+                        this.emit('connected', (msg as WsAuthOk).ha_version ?? '');
+                        resolveConnect?.();
+                        resolveConnect = undefined;
+                        rejectConnect = undefined;
+                    },
+                    err => {
+                        authDone = true;
+                        this.shouldReconnect = false;
+                        this.emit('authError', err);
+                        rejectConnect?.(new Error(err));
+                        resolveConnect = undefined;
+                        rejectConnect = undefined;
+                        try {
+                            ws.close();
+                        } catch {
+                            /* ignore */
+                        }
+                    },
+                );
                 return;
             }
 
@@ -206,9 +215,7 @@ export class HassWsClient extends EventEmitter {
                     pending.resolve(r.result);
                 } else {
                     pending.reject(
-                        new Error(
-                            `hass-error [${r.error?.code ?? 'unknown'}]: ${r.error?.message ?? 'no detail'}`,
-                        ),
+                        new Error(`hass-error [${r.error?.code ?? 'unknown'}]: ${r.error?.message ?? 'no detail'}`),
                     );
                 }
             }
