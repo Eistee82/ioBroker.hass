@@ -105,7 +105,19 @@ Please check it https://www.smarthomejetzt.de/mit-iobroker-auf-eine-home-assista
 	### **WORK IN PROGRESS**
 -->
 
+## Documentation
+
+- [English documentation](./docs/en/README.md)
+- [Deutsche Dokumentation](./docs/de/README.md)
+- [States Reference](./docs/en/states-reference.md)
+
 ## Changelog
+
+### **WORK IN PROGRESS**
+- (Eistee82) Rewrote the adapter core for v3: new HassWsClient with compressed subscribe_entities deltas, RegistryCache with live registry events, dual ioBroker object tree (type-detector-conform devices.* plus optional entities.* mirror), ServiceDispatcher with optimistic writes and coalescing, six-tab Admin UI with expertMode-gated power-user fields.
+- (Eistee82) Added Secret-Guard, compliance-reviewer and state-role-validator agents plus a pre-commit hook that blocks token leaks, version bumps and unexpected news entries.
+- (Eistee82) Added Playwright-based E2E harness running against @iobroker/dev-server and a live Home Assistant VM.
+
 ### 2.0.3 (2026-04-02)
 * (@GermanBluefox) Adapter was updated and migrated to TypeScript
 * (@Titanium177) Added roles for states and added debouncing for reading states from hass
