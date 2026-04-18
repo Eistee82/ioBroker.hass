@@ -1,0 +1,14 @@
+# Enforce LF line endings for all text files on all platforms.
+# Without this, Windows clones get CRLF-converted by default, which
+# breaks prettier/eslint on the v2 code base.
+
+* text=auto eol=lf
+
+# Binary assets should never be treated as text.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.pdf binary
