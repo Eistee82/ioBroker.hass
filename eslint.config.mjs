@@ -37,6 +37,7 @@ export default [
             'vitest.config.ts',
             'src/**/__tests__/**/*',
             'src/**/*.test.ts',
+            'src/legacy/**/*',
             '**/*.mjs',
         ],
     },

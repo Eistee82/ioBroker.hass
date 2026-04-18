@@ -4,5 +4,56 @@
     "Password repeat": "Passwort wiederholen",
     "Password": "Passwort",
     "Passwords missmatch!": "Passwörter stimmen nicht überein!",
-    "Secure": "HTTPS?"
+    "Secure": "HTTPS?",
+
+    "tab_connection": "Verbindung",
+    "tab_objects": "Objekte",
+    "tab_selection": "Auswahl",
+    "tab_assignment": "Zuordnung",
+    "tab_mapping": "Mapping",
+    "tab_diagnostics": "Diagnose",
+
+    "intro_connection": "Verbinde den Adapter mit deiner Home-Assistant-Installation. Du brauchst IP/Hostname und einen Long-Lived Access Token aus deinem HASS-Profil. Sensible Felder werden verschlüsselt und vor unbefugtem Zugriff geschützt gespeichert.",
+    "intro_objects": "Lege fest, welche Objektbäume der Adapter anlegt und wie schnell State-Änderungen weitergereicht werden. Die Defaults sind für die meisten Setups optimal — Änderungen brauchst du nur bei speziellen Anforderungen.",
+    "intro_selection": "In Home Assistant entstehen oft hunderte Entities, von denen du nur einen Teil in ioBroker brauchst. Hier wählst du gezielt aus. Nicht ausgewählte Devices erscheinen weder in devices.* noch in entities.*.",
+    "intro_assignment": "Ordne deine Geräte den ioBroker-Räumen und -Funktionen zu. Voraussetzung, damit Alexa, VIS oder Material-Adapter sie in den richtigen Raum sortieren. Der Adapter erstellt keine neuen Enums — er nutzt nur bestehende.",
+    "intro_mapping": "Manchmal erkennt der Adapter eine Entity nicht automatisch oder du willst sie anders typisieren. Hier überschreibst du die automatische Erkennung. Bedienung angelehnt an den ioBroker.devices-Adapter.",
+    "intro_diagnostics": "Ein Blick auf die Gesundheit deiner Integration. Wenn etwas nicht wie erwartet funktioniert, findest du hier die Ursache — und kannst Service-Calls direkt absetzen, ohne ein Skript zu schreiben.",
+
+    "label_host": "Host",
+    "help_host": "IP oder Hostname deiner HASS-Instanz (z.B. homeassistant.local oder 192.168.1.10).",
+    "label_port": "Port",
+    "help_port": "Port der HASS-WebSocket-API. Standard 8123, nur ändern falls HASS hinter einem Reverse-Proxy liegt.",
+    "label_secure": "HTTPS / WSS",
+    "help_secure": "Aktivieren, wenn HASS über TLS erreichbar ist.",
+    "label_access_token": "Long-Lived Access Token",
+    "help_access_token": "Erzeuge einen in HASS → Profil → Sicherheit → Langlebige Zugriffstoken. 10 Jahre gültig.",
+    "label_allow_selfsigned": "Selbst-signierte TLS-Zertifikate akzeptieren",
+    "help_allow_selfsigned": "Nur im vertrauenswürdigen LAN sinnvoll. Ein Warn-Banner weist darauf hin.",
+    "label_ca_certificate": "Eigenes CA-Zertifikat (PEM)",
+    "help_ca_certificate": "Einer internen CA vertrauen statt Zertifikatsprüfung komplett abzuschalten.",
+    "btn_test_connection": "Verbindung testen",
+
+    "label_create_devices_tree": "devices.*-Baum anlegen (Type-Detector-konform)",
+    "help_create_devices_tree": "Voraussetzung für Alexa, iQontrol, Material-Adapter und andere Smart-Home-Oberflächen.",
+    "label_create_entities_tree": "entities.*-Baum anlegen (1:1-HASS-Mirror)",
+    "help_create_entities_tree": "Sinnvoll, wenn deine Skripte HASS-Attribute direkt lesen. Standardmäßig aus.",
+    "label_auto_include": "Neu entdeckte Devices automatisch synchronisieren",
+    "help_auto_include": "Wenn aus, landen neu entdeckte Devices im Auswahl-Tab zur manuellen Prüfung.",
+    "label_debounce_ms": "Debounce-Fenster (ms)",
+    "help_debounce_ms": "Bündelt schnelle Updates derselben Entity. Höher = weniger Writes, träger. Niedriger = reaktiver, mehr Last.",
+    "label_write_coalesce_ms": "Write-Coalesce-Fenster (ms)",
+    "help_write_coalesce_ms": "Fasst schnelle Writes auf dasselbe Ziel zu einem call_service zusammen (z.B. Slider-Drag).",
+    "label_response_timeout_ms": "Service-Call-Timeout (ms)",
+    "help_response_timeout_ms": "Wartet max. so lange auf HASS-Bestätigung, bevor der State als Timeout markiert wird.",
+
+    "label_include_patterns": "Include-Muster (fortgeschritten)",
+    "help_include_patterns": "Glob-Muster. Wenn gesetzt: nur Matches werden synchronisiert (z.B. light.*).",
+    "label_exclude_patterns": "Exclude-Muster (fortgeschritten)",
+    "help_exclude_patterns": "Überschreibt die Device-Checkbox. Beispiel: sensor.*_signal_strength verbirgt alle Signalstärke-Sensoren.",
+
+    "hint_assignment_dynamic": "Die dynamische Zuordnungs-Tabelle wird live aus deiner HASS-Registry generiert. Öffne die Adapter-Einstellungen im verbundenen Zustand, um sie zu sehen.",
+    "hint_mapping_dynamic": "Die Custom-Mapping-Tabelle wird live aus deinen HASS-Entities erzeugt. Öffne die Adapter-Einstellungen im verbundenen Zustand.",
+
+    "btn_force_sync": "Jetzt synchronisieren"
 }

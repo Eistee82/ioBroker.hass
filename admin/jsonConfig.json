@@ -1,44 +1,229 @@
 {
     "i18n": true,
-    "type": "panel",
+    "type": "tabs",
     "items": {
-        "host": {
-            "type": "text",
-            "label": "Home assistant IP",
-            "sm": 12,
-            "md": 6,
-            "lg": 4
+        "connectionTab": {
+            "type": "panel",
+            "label": "tab_connection",
+            "items": {
+                "_intro": {
+                    "type": "staticText",
+                    "text": "intro_connection",
+                    "hidden": "!!_admin && !!_admin.expertMode",
+                    "sm": 12
+                },
+                "host": {
+                    "type": "text",
+                    "label": "label_host",
+                    "help": "help_host",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4
+                },
+                "port": {
+                    "type": "number",
+                    "label": "label_port",
+                    "help": "help_port",
+                    "min": 1,
+                    "max": 65535,
+                    "default": 8123,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4
+                },
+                "secure": {
+                    "type": "checkbox",
+                    "label": "label_secure",
+                    "help": "help_secure",
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4
+                },
+                "accessToken": {
+                    "type": "password",
+                    "label": "label_access_token",
+                    "help": "help_access_token",
+                    "repeat": false,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12
+                },
+                "allowSelfSignedCert": {
+                    "type": "checkbox",
+                    "label": "label_allow_selfsigned",
+                    "help": "help_allow_selfsigned",
+                    "expertMode": true,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 6
+                },
+                "caCertificate": {
+                    "type": "text",
+                    "label": "label_ca_certificate",
+                    "help": "help_ca_certificate",
+                    "expertMode": true,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12
+                },
+                "_testConnection": {
+                    "type": "sendTo",
+                    "label": "btn_test_connection",
+                    "command": "testConnection",
+                    "jsonData": "{\"host\":\"${data.host}\",\"port\":${data.port},\"secure\":${data.secure},\"accessToken\":\"${data.accessToken}\"}",
+                    "variant": "contained",
+                    "sm": 12
+                }
+            }
         },
-        "port": {
-            "type": "number",
-            "label": "Home assistant WS Port",
-            "min": 1,
-            "max": 65535,
-            "sm": 12,
-            "md": 6,
-            "lg": 4
+        "objectsTab": {
+            "type": "panel",
+            "label": "tab_objects",
+            "items": {
+                "_intro": {
+                    "type": "staticText",
+                    "text": "intro_objects",
+                    "hidden": "!!_admin && !!_admin.expertMode",
+                    "sm": 12
+                },
+                "createDevicesTree": {
+                    "type": "checkbox",
+                    "label": "label_create_devices_tree",
+                    "help": "help_create_devices_tree",
+                    "default": true,
+                    "sm": 12,
+                    "md": 6
+                },
+                "createEntitiesTree": {
+                    "type": "checkbox",
+                    "label": "label_create_entities_tree",
+                    "help": "help_create_entities_tree",
+                    "default": false,
+                    "sm": 12,
+                    "md": 6
+                },
+                "autoIncludeNewDevices": {
+                    "type": "checkbox",
+                    "label": "label_auto_include",
+                    "help": "help_auto_include",
+                    "default": true,
+                    "sm": 12,
+                    "md": 6
+                },
+                "debounceMs": {
+                    "type": "number",
+                    "label": "label_debounce_ms",
+                    "help": "help_debounce_ms",
+                    "default": 50,
+                    "min": 0,
+                    "max": 5000,
+                    "expertMode": true,
+                    "sm": 12,
+                    "md": 4
+                },
+                "writeCoalesceMs": {
+                    "type": "number",
+                    "label": "label_write_coalesce_ms",
+                    "help": "help_write_coalesce_ms",
+                    "default": 30,
+                    "min": 0,
+                    "max": 2000,
+                    "expertMode": true,
+                    "sm": 12,
+                    "md": 4
+                },
+                "responseTimeoutMs": {
+                    "type": "number",
+                    "label": "label_response_timeout_ms",
+                    "help": "help_response_timeout_ms",
+                    "default": 2000,
+                    "min": 500,
+                    "max": 60000,
+                    "expertMode": true,
+                    "sm": 12,
+                    "md": 4
+                }
+            }
         },
-        "_divider1": {
-            "type": "divider"
+        "selectionTab": {
+            "type": "panel",
+            "label": "tab_selection",
+            "items": {
+                "_intro": {
+                    "type": "staticText",
+                    "text": "intro_selection",
+                    "hidden": "!!_admin && !!_admin.expertMode",
+                    "sm": 12
+                },
+                "sync.includePatterns": {
+                    "type": "chips",
+                    "label": "label_include_patterns",
+                    "help": "help_include_patterns",
+                    "expertMode": true,
+                    "sm": 12
+                },
+                "sync.excludePatterns": {
+                    "type": "chips",
+                    "label": "label_exclude_patterns",
+                    "help": "help_exclude_patterns",
+                    "expertMode": true,
+                    "sm": 12
+                }
+            }
         },
-        "password": {
-            "type": "password",
-            "label": "Password",
-            "repeat": true,
-            "visible": true,
-            "sm": 12,
-            "md": 6,
-            "lg": 4
+        "assignmentTab": {
+            "type": "panel",
+            "label": "tab_assignment",
+            "items": {
+                "_intro": {
+                    "type": "staticText",
+                    "text": "intro_assignment",
+                    "hidden": "!!_admin && !!_admin.expertMode",
+                    "sm": 12
+                },
+                "_hint": {
+                    "type": "staticText",
+                    "text": "hint_assignment_dynamic",
+                    "sm": 12
+                }
+            }
         },
-        "_divider2": {
-            "type": "divider"
+        "mappingTab": {
+            "type": "panel",
+            "label": "tab_mapping",
+            "items": {
+                "_intro": {
+                    "type": "staticText",
+                    "text": "intro_mapping",
+                    "hidden": "!!_admin && !!_admin.expertMode",
+                    "sm": 12
+                },
+                "_hint": {
+                    "type": "staticText",
+                    "text": "hint_mapping_dynamic",
+                    "sm": 12
+                }
+            }
         },
-        "secure": {
-            "type": "checkbox",
-            "label": "Secure",
-            "sm": 12,
-            "md": 6,
-            "lg": 4
+        "diagnosticsTab": {
+            "type": "panel",
+            "label": "tab_diagnostics",
+            "items": {
+                "_intro": {
+                    "type": "staticText",
+                    "text": "intro_diagnostics",
+                    "hidden": "!!_admin && !!_admin.expertMode",
+                    "sm": 12
+                },
+                "_forceSync": {
+                    "type": "sendTo",
+                    "label": "btn_force_sync",
+                    "command": "forceSync",
+                    "variant": "outlined",
+                    "sm": 12,
+                    "md": 6
+                }
+            }
         }
     }
 }

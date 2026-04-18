@@ -4,5 +4,56 @@
     "Password repeat": "Password repeat",
     "Password": "Password",
     "Passwords missmatch!": "Passwords missmatch!",
-    "Secure": "HTTPS?"
+    "Secure": "HTTPS?",
+
+    "tab_connection": "Connection",
+    "tab_objects": "Objects",
+    "tab_selection": "Selection",
+    "tab_assignment": "Assignment",
+    "tab_mapping": "Mapping",
+    "tab_diagnostics": "Diagnostics",
+
+    "intro_connection": "Connect the adapter to your Home Assistant installation. You will need the IP/hostname and a Long-Lived Access Token from your HASS profile. Sensitive fields are encrypted and shielded from non-admin access.",
+    "intro_objects": "Choose which object trees the adapter creates and how quickly state changes propagate. The defaults are good for most setups; change them only if you have specific needs.",
+    "intro_selection": "Home Assistant often exposes hundreds of entities. Pick which ones are relevant to you. Unselected items appear neither in devices.* nor entities.*.",
+    "intro_assignment": "Map your devices to ioBroker rooms and functions so Alexa, VIS, Material etc. pick them up in the correct room. The adapter never creates new enums — it only uses ones you already have.",
+    "intro_mapping": "Sometimes an entity is not auto-detected as a known device type, or you want to classify it differently. Override the detection here. The UX mirrors ioBroker.devices.",
+    "intro_diagnostics": "A health overview of the adapter. Invoke service calls without writing scripts and inspect why an entity is not mapped.",
+
+    "label_host": "Host",
+    "help_host": "IP or hostname of your Home Assistant (e.g. homeassistant.local or 192.168.1.10).",
+    "label_port": "Port",
+    "help_port": "WebSocket API port. Default is 8123; change only if HASS sits behind a reverse proxy.",
+    "label_secure": "HTTPS / WSS",
+    "help_secure": "Enable when HASS is served over TLS.",
+    "label_access_token": "Long-Lived Access Token",
+    "help_access_token": "Create one in HASS → Profile → Security → Long-Lived Access Tokens. Valid for 10 years.",
+    "label_allow_selfsigned": "Accept self-signed TLS certificates",
+    "help_allow_selfsigned": "Only sensible on a trusted LAN. A warning banner will remind you.",
+    "label_ca_certificate": "Custom CA certificate (PEM)",
+    "help_ca_certificate": "Trust an internal CA instead of disabling certificate checks.",
+    "btn_test_connection": "Test connection",
+
+    "label_create_devices_tree": "Create devices.* tree (type-detector conform)",
+    "help_create_devices_tree": "Needed for Alexa, iQontrol, Material adapter and other smart-home surfaces.",
+    "label_create_entities_tree": "Create entities.* tree (1:1 HASS mirror)",
+    "help_create_entities_tree": "Useful if your scripts directly read HASS attributes. Off by default.",
+    "label_auto_include": "Auto-include new devices",
+    "help_auto_include": "When HASS discovers a new device, synchronise it automatically. When off, new devices land in the Selection tab for review.",
+    "label_debounce_ms": "Debounce window (ms)",
+    "help_debounce_ms": "Bursts of updates for the same entity inside this window are collapsed. Higher = fewer writes, slower reaction. Lower = more responsive, more load.",
+    "label_write_coalesce_ms": "Write coalesce window (ms)",
+    "help_write_coalesce_ms": "Collapses rapid writes on the same target into a single call_service (e.g. slider drags).",
+    "label_response_timeout_ms": "Service-call timeout (ms)",
+    "help_response_timeout_ms": "Wait this long for HASS to ack a service call before flagging the state as timeout.",
+
+    "label_include_patterns": "Include patterns (advanced)",
+    "help_include_patterns": "Glob patterns. If set, only matching entities are synced (e.g. light.*).",
+    "label_exclude_patterns": "Exclude patterns (advanced)",
+    "help_exclude_patterns": "Overrides the device checkbox. Example: sensor.*_signal_strength hides all signal-strength sensors.",
+
+    "hint_assignment_dynamic": "The dynamic device/entity assignment view is generated from your live HASS registry. Open the adapter settings while connected to see the table.",
+    "hint_mapping_dynamic": "The custom mapping view is populated from live HASS entities. Open the adapter settings while connected.",
+
+    "btn_force_sync": "Sync now"
 }
